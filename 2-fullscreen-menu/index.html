@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Document</title>
+
+  <link
+    rel="stylesheet"
+    href="./../base.css"
+  >
+
+  <style>
+    nav {
+      position: fixed;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5em 2em;
+      color: #cdc6be;
+      mix-blend-mode: difference;
+      z-index: 2;
+    }
+
+    .logo {
+      font-size: 30px;
+    }
+
+    .toggle-btn {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .burger {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.75em 2em 1.5em 2em;
+      width: 28px;
+      height: 20px;
+      transition: all 250ms ease-out;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    .burger::before,
+    .burger::after {
+      content: '';
+      width: 40px;
+      height: 2px;
+      position: absolute;
+      background: #cdc6be;
+      transition: all 250ms ease-out;
+      will-change: transform;
+    }
+
+    .burger::before {
+      translate: 0 -3px;
+    }
+
+    .burger::after {
+      translate: 0 3px;
+    }
+
+    .burger.is-active::before {
+      translate: 0 0;
+      rotate: 45deg;
+    }
+
+    .burger.is-active::after {
+      translate: 0 0;
+      rotate: -45deg;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100svh;
+      background: #cdc6be;
+      will-change: transform;
+      clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    }
+
+    .overlay-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      flex-direction: column;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .menu-item {
+      display: flex;
+      cursor: pointer;
+    }
+
+    .menu-item p {
+      position: relative;
+      text-align: center;
+      font-size: 14vw;
+      line-height: 1;
+      will-change: transform;
+      transition: letter-spacing 0.2s;
+    }
+
+    .menu-item p:hover {
+      letter-spacing: 0.075em;
+    }
+
+    .menu-item#active p {
+      color: #f65044;
+    }
+
+    .sub-menu {
+      position: absolute;
+      bottom: 2%;
+      left: 50%;
+      translate: -50% 0;
+      display: flex;
+      gap: 0.5em;
+      color: #cec6be;
+      opacity: 0;
+      cursor: pointer;
+      mix-blend-mode: difference;
+
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="info">
+      <p>Folio Vol. 1</p>
+    </div>
+    <div class="logo">
+      <p>Logo Brand</p>
+    </div>
+    <div class="toggle-btn">
+      <button class="burger"></button>
+    </div>
+  </nav>
+
+  <div class="overlay">
+    <div class="overlay-menu">
+      <div
+        class="menu-item"
+        id="active"
+      >
+        <p>Home</p>
+      </div>
+      <div class="menu-item">
+        <p>Work</p>
+      </div>
+      <div class="menu-item">
+        <p>About</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-menu">
+    <p>Twitter</p>
+    <p>Instagram</p>
+    <p>Youtube</p>
+  </div>
+
+
+  <script
+    src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js'
+    integrity='sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=='
+    crossorigin='anonymous'
+  ></script>
+
+  <script>
+    const toggleButton = document.querySelector('.burger')
+    let isOpen = false;
+
+    gsap.set('.menu-item p', { y: 255 });
+
+    const timeline = gsap.timeline({ paused: true });
+
+    timeline.to('.overlay', {
+      duration: 1.5,
+      clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+      ease: 'power4.inOut',
+    });
+
+    timeline.to('.menu-item p', {
+      duration: 0.5,
+      stagger: 0.2,
+      y: 0,
+      ease: 'power4.inOut',
+    }, '-=1');
+
+    timeline.to('.sub-menu', {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power1.inOut',
+      delay: 0.5
+    });
+
+    toggleButton.addEventListener('click', () => {
+      toggleButton.classList.toggle('is-active');
+      if (isOpen) timeline.reverse();
+      else timeline.play();
+      isOpen = !isOpen;
+    })
+
+  </script>
+</body>
+
+</html>

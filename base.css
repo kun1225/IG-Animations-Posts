@@ -12,10 +12,38 @@ html, body {
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+  background-color: var(--black);
+}
+
+div, section, span, ul, article {
+  color: var(--white);
+}
+
+a {
+  text-decoration: none;
+}
+
+a, a:hover, a:visited {
+  color: var(--white);
+}
+
+ul, ol {
+  list-style: none;
 }
 
 :root {
   --black: #23232b;
+  --dark-black: #111111;
   --blue: #2ecee0;
+  --red: #f65044
   --white: #ffffff; 
+  --cream: #cec6be;
+  --spacing-s: 16px;
+  --spacing-m: 24px;
+  --spacing-l: 48px;
+}
+
+button {
+  border: none;
+  outline: none;
 }
