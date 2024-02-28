@@ -6,6 +6,18 @@
   box-sizing: border-box;
 }
 
+:root {
+  --black: #23232b;
+  --dark-black: #111111;
+  --blue: #2ecee0;
+  --red: #f65044;
+  --white: #ffffff; 
+  --cream: #cec6be;
+  --spacing-s: 16px;
+  --spacing-m: 24px;
+  --spacing-l: 48px;
+}
+
 html, body {
   min-height: 100dvh;
   font-family: "Montserrat", "Noto Sans TC", sans-serif;
@@ -31,17 +43,7 @@ ul, ol {
   list-style: none;
 }
 
-:root {
-  --black: #23232b;
-  --dark-black: #111111;
-  --blue: #2ecee0;
-  --red: #f65044
-  --white: #ffffff; 
-  --cream: #cec6be;
-  --spacing-s: 16px;
-  --spacing-m: 24px;
-  --spacing-l: 48px;
-}
+
 
 button {
   border: none;
