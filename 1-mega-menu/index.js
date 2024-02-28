@@ -28,9 +28,3 @@ megaMenuTriggers.forEach((item) =>
     toggleMegaMenu(currentMegaMenu);
   })
 );
-
-// megaMenu.forEach((item, index) =>
-//   item.addEventListener('mouseleave', () => {
-//     megaMenu[index].classList.remove('is-active');
-//   })
-// );
