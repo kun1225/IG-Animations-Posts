@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    :root {
+  --button-motion-ease: cubic-bezier(.5,-0.5,.5,1.5);
+  --button-motion-duration: 0s;
+  --button-scale-up: 1.05;
+  --button-scale-down: 0.95;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --button-motion-duration: 0.3s;
+  }
+}
+
+.button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  line-height: 1;
+  padding: 1em 1.5em;
+  position: relative;
+  transition: filter 0.3s var(--button-motion-ease);
+  user-select: none;
+}
+
+.button:hover {
+  filter: brightness(1.1);
+}
+
+.button:active {
+  filter: brightness(0.9);
+}
+
+.button__content {
+  display: block;
+  position: relative;
+  transition: transform 0.3s var(--button-motion-ease);
+}
+
+.button:hover .button__content {
+  transform: scale(var(--button-scale-up));
+}
+
+.button:active .button__content {
+  transform: scale(var(--button-scale-down));
+}
+
+.button__shape {
+  fill: #ffa600;
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+  transition: transform 0.3s var(--button-motion-ease);
+}
+
+@supports not (d: path('')) {
+  .button:hover .button__shape {
+    transform: scale(var(--button-scale-up));
+  }
+
+  .button:active .button__shape {
+    transform: scale(var(--button-scale-down));
+  }
+}
+
+.button__path {
+  transition: d 0.3s var(--button-motion-ease);
+}
+
+.button:hover .button__path {
+  d: path("M0,0 C0,-5 100,-5 100,0 C105,0 105,100 100,100 C100,105 0,105 0,100 C-5,100 -5,0 0,0 z");
+}
+
+.button:active .button__path {
+  d: path("M0,0 C30,10 70,10 100,0 C95,30 95,70 100,100 C70,90 30,90 0,100 C5,70 5,30 0,0 z");
+} 
+
+/**
+ * Demo-specific styles starts here
+ */
+
+html {
+  height: 100%;
+}
+
+body {
+  background: #23232b;
+  box-sizing: border-box;
+  color: rgba(255, 255, 255, 0.6);
+  display: grid;
+  font-family: 'Rubik', sans-serif;
+  font-size: clamp(1rem, 5vw, 2rem);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, auto);
+  line-height: 1.5;
+  margin: 0;
+  min-height: 100%;
+  padding: 1.5em;
+  place-items: center;
+  text-align: center;
+}
+
+.note {
+  font-family: sans-serif;
+  font-size: 1rem;
+  margin: 1em 0 0;
+  text-wrap: balance;
+}
+
+@supports (d: path('')) {
+  .note {
+    display: none;
+  }
+}
+  </style>
+</head>
+<body>
+  <button class="button">
+    <svg class="button__shape" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path class="button__path" d="M0,0 C0,0 100,0 100,0 C100,0 100,100 100,100 C100,100 0,100 0,100 C0,100 0,0 0,0 z"/>
+    </svg>
+    <span class="button__content">
+      Hello world
+    </span>
+  </button>
+  
+  <p class="note">
+    Your browser does not support setting path data via CSS.
+  </p>
+</body>
+</html>

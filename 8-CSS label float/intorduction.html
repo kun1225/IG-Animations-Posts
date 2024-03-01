@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Document</title>
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      font-family: 'poppins';
+      height: 100%;
+    }
+
+    body {
+      background: #23232d;
+      display: grid;
+      place-content: center;
+    }
+
+
+    .input::selection {
+      color: #23232b;
+      background: #fff;
+    }
+
+    .label {
+      color: #999;
+    }
+
+    /* 
+    純 CSS 怎麼做表單的浮動標籤
+    不需要 JS 也能做出常見的 UI 效果
+    */
+
+    /* 
+在很多填表單的地方都會看到類似這樣的效果
+當輸入者輸入後，標籤會移到上面
+如果沒有輸入東西，則會往下移
+
+這可以用 css 中很特別的偽類做到喔
+你想到怎麼做了嗎?
+    */
+
+    /* 
+    一樣我們先簡單做做樣式
+
+要注意的是，我們要用 ::placeholder 將 input 預設的 placeholder 隱藏起來
+因為我們要用自己的 label
+雖然隱藏起來，但我們還是需要設定 placeholder 屬性，等等你就知道為什麼了
+    */
+
+    .input-container {
+      position: relative;
+      margin-top: 48px;
+      width: 360px;
+    }
+    .input {
+      all: unset;
+      font-size: 20px;
+      width: 100%;
+      padding: 8px 0;
+      color: #fff;
+      border-bottom: 1px solid #999;
+      transition: 250ms ease-in-out;
+    }
+    .input::placeholder {
+      color: transparent;
+    }
+
+     /* .input::-webkit-contacts-auto-fill-button {
+      visibility: hidden;
+      pointer-events: none;
+      position: absolute;
+    }  */
+
+    /* 
+接著我們設定 label 的位置
+讓他再輸入欄裡面
+可以加上 transform-origin 來設定位移的基準點
+    */
+
+    .label {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      color: #999;
+      transform-origin: left center;
+      transition: 250ms ease-in-out;
+    } 
+
+    /* 
+重頭戲來了
+我們可以用 :placeholder-shown 來判斷 placeholder 是否有顯示
+如果用戶沒有輸入東西，就會顯示
+
+所以可以搭配 :not() 監測 placeholder 不顯示的時候，也就是用戶輸入東西的時候
+如果輸入東西 就讓 label 往上移動並縮小
+
+而 :placeholder-shown 這個偽類一定要在 html input 裡設定 placeholder 屬性才能使用
+所以前面才會設定了又隱藏起來
+
+這是一個在表單蠻實用的技巧
+你還有看過什麼有趣的表單效果嗎
+留言跟我討論喔！
+那今天就這樣，下次見
+    
+    */
+
+    .input:focus {
+      border-bottom-color: #ddd;
+    }
+    .input:focus + .label {
+      color: #ddd;
+    }
+
+    .input:focus + .label,
+    .input:not(:placeholder-shown)+.label {
+      transform: translateY(-100%) scale(0.75);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="input-container">
+    <input
+      class="input"
+      type="text"
+      id="name"
+      placeholder="Name"
+    />
+    <label
+      class="label"
+      for="name"
+    >
+      Name
+    </label>
+  </div>
+  <div class="input-container">
+    <input
+      class="input"
+      id="email"
+      type="email"
+      placeholder="Email"
+    />
+    <label
+      class="label"
+      for="email"
+    >
+      Email
+    </label>
+  </div>
+</body>
+
+</html>

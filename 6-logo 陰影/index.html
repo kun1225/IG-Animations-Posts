@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Document</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap');
+
+
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body,
+    html {
+      font-family: 'Noto Serif', serif;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      background: #23232d;
+    }
+    
+    /* 
+    讓網頁 LOGO 和使用者互動
+    文字陰影還能這麼做
+    */
+    
+    /* 
+前陣子看到這樣的效果
+當滑鼠移到範圍內，文字會產生陰影並移動
+覺得很適合放在 logo 上，而且很有趣
+    
+    你有想到怎麼做嗎
+    */
+
+    /* 
+HTML 很簡單，兩個元素而已
+接著我們先設定想要的顏色
+然後設定 container 讓 logo 置中
+    */
+    
+    :root {
+      --color0: #ffffff;
+      --color1: #525FE1;
+      --color2: #F86F03;
+      --color3: #FFA41B;
+      --color4: #ff4970;
+    }
+
+    .logo-container {
+      padding: 88px;
+      display: grid;
+      place-content: center;
+    }
+
+    /* 
+而讓文字有很多層的效果
+是用陰影 text-shadow 來做到的
+他可以疊很多層來製作多重陰影
+
+可以看到文字的白色也是用陰影做的，不是文字本身的顏色
+所以記得將 color 設置為透明
+這樣做是因為我們希望每一層都跟隨滑鼠移動
+    */
+
+    /* .logo {
+      color: transparent;
+      transition: .4s linear;
+      text-shadow:
+        5px 5px 0px var(--color0),
+        4px 4px 0px var(--color1),
+        3px 3px 0px var(--color2),
+        2px 2px 0px var(--color3),
+        1px 1px 0px var(--color4);
+    } */
+
+    /* 
+    接著讓我們設定 JS 讓陰影跟著滑鼠移動
+    */
+
+    /* 
+我們修改 text-shadow，讓陰影的位置隨著 --x & --y 改變
+calc() 是 css 的計算函數，它可以用來做基本的加減乘除
+這樣就可以把每層陰影拉開
+到這邊就大功告成啦！
+很簡單卻又很有趣，給使用者一個驚喜
+今天就這樣，下次見~!
+    */
+
+    .logo {
+      --x: 0px;
+      --y: 0px;
+      color: transparent;
+      transition: .4s linear;
+      text-shadow:
+        calc(var(--x) * 5) calc(var(--y) * 5) 0px var(--color0),
+        calc(var(--x) * 4) calc(var(--y) * 4) 0px var(--color1),
+        calc(var(--x) * 3) calc(var(--y) * 3) 0px var(--color2),
+        calc(var(--x) * 2) calc(var(--y) * 2) 0px var(--color3),
+        calc(var(--x) * 1) calc(var(--y) * 1) 0px var(--color4);
+    }
+
+
+  </style>
+</head>
+
+<body>
+  <div class="logo-container">
+    <h1 class="logo">T</h1>
+  </div>
+
+  <script>
+    /* 
+    獲取元素
+
+    幫 container 添加滑鼠移動 mousemove 的事件
+    
+可以用 getBoundingClintRect() 方法取得 container 的 left top width height
+left top 是 container 離視窗左上角的距離
+e.clientX e.clientY 是滑鼠離視窗左上角的距離
+e.clientX - left - width / 2 就可以算出滑鼠離 container 中心的距離
+
+    並將距離賦值給 --x & --y 的 css 變數
+
+    最後設置 mouseout 滑鼠移出的效果，讓 --x & --y 回到初始值
+
+    最後我們在回去更改一下 CSS 就完成了！
+    */
+    const container = document.querySelector('.logo-container');
+    const logo = document.querySelector('.logo');
+
+    container.addEventListener('mousemove', (e) => {
+      const { left, top, width, height } 
+        = container.getBoundingClientRect();
+
+      const x = e.clientX - left - width / 2;
+      const y = e.clientY - top - height / 2;
+      
+      logo.style.setProperty('--x', `${x / 20}px`);
+      logo.style.setProperty('--y', `${y / 20}px`);
+    })
+
+    container.addEventListener('mouseout', (e) => {
+      logo.style.setProperty('--x', `${0}px`);
+      logo.style.setProperty('--y', `${0}px`);
+    })
+  </script>
+</body>
+
+</html>

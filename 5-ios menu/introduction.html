@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Document</title>
+
+  <script
+    type="module"
+    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+  ></script>
+  <script
+    nomodule
+    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+  ></script>
+
+  <style>
+    @import "https://unpkg.com/open-props/normalize.min.css";
+    @import "https://unpkg.com/open-props/open-props.min.css";
+
+    /* :root {
+      --flex-0: 1;
+      --flex-1: calc(sin(30deg));
+      --flex-2: calc(sin(20deg));
+      --flex-3: calc(sin(10deg));
+      --flex-4: 0;
+    } */
+
+    *,
+    *:after,
+    *:before {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      background: #23232b;
+    }
+
+    /* 
+    首先我們先設置好變數
+    */
+
+    :root {
+      --flex-0: 1;
+      --flex-1: 0.75;
+      --flex-2: 0.5;
+      --flex-3: 0.25;
+    }
+
+    .block:nth-of-type(1) {
+      --hue: 10;
+    }
+
+    .block:nth-of-type(2) {
+      --hue: 210;
+    }
+
+    .block:nth-of-type(3) {
+      --hue: 290;
+    }
+
+    .block:nth-of-type(4) {
+      --hue: 340;
+    }
+
+    .block:nth-of-type(5) {
+      --hue: 30;
+    }
+
+    .block:nth-of-type(6) {
+      --hue: 220;
+    }
+
+    .block:nth-of-type(7) {
+      --hue: 320;
+    }
+
+    .block:nth-of-type(8) {
+      --hue: 280;
+    }
+
+    .block:nth-of-type(9) {
+      --hue: 240;
+    }
+
+    /* 
+接著來簡單調整 blocks、 block、block__item 的樣式
+在 block 中，我們用 --flex 變數來決定每個 block 的比例
+默認是 0，也就是一開始大家比例都一樣
+    */
+
+    .blocks {
+      padding: 8px 16px;
+      border-radius: 0.4rem;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      gap: 32px;
+      align-content: center;
+    }
+
+    .block {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      align-content: center;
+      transition: all .6s;
+      flex: calc(0.2 + var(--flex, 0));
+      max-width: 100px;
+    }
+    
+    /* 
+而在 block__item 中，我們用 translate 搭配 --flex 變數
+調整每個 item 的位移，因為現在還有沒動 --flex 變數，
+所以大家都沒有位移
+    */
+
+    .block__item {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: .2rem;
+      background:
+        hsl(var(--hue, 10) 65% 60%);
+      display: grid;
+      place-items: center;
+      transition: all 0.6s;
+      translate: 0 calc(var(--flex, 0) * -60%);
+    }
+    .block__item > ion-icon {
+      width: 50%;
+      height: 50%;
+      color: #fff;
+    }
+    
+    /* 
+馬上進入重頭戲
+我們來調整 hover 時的效果
+被 hover 的 block，他的 flex 會被設為 --flex-0，也就是 1
+這時其他 block 的 flex 是 0
+所以被 hover 的那個 block 會放很大
+同時往上位移
+    */
+
+    .block:hover {
+      --flex: var(--flex-0);
+    }
+    .blocks:hover .block:not(:hover) {
+      filter: brightness(0.5);
+    }
+
+    /* 
+然後我們可以用 has 這個偽類來獲取當前 hover 元素的前一個元素
++ 是指下一個元素
+所以這裡的意思是
+如果 block 有(下一個 block 被 hover) 則觸發
+以及 被 hover 的 block 的下一個 block
+
+簡單講就是獲取 hover 的前一個和後一個元素
+    */
+
+
+    .block:has(+ .block:hover),
+    .block:hover + .block {
+      --flex: var(--flex-1);
+    } 
+
+    /* 
+接著我們依此類推
+獲取分別獲取前後二三個元素
+並設定 --flex 變數
+    */
+
+    .block:has(+ .block + .block:hover),
+    .block:hover + .block + .block {
+      --flex: var(--flex-2);
+    }
+
+    .block:has(+ .block + .block + .block:hover),
+    .block:hover + .block + .block + .block {
+      --flex: var(--flex-3);
+    } 
+
+    /* 最後我們在調整每個 block__item 的顏色就大功告成了！ */
+
+    /* .block:has(+ .block + .block + .block + .block:hover),
+    .block:hover + .block + .block + .block +.block {
+      --flex: var(--flex-4);
+      z-index: 1;
+    } */
+  </style>
+</head>
+
+<body>
+  <!-- 
+    先簡單看一下 HTML 結構
+    最外層是 blocks
+    裡面有很多的 block，block 裡有 item 放 icon
+    這裡的 icon 我用免費的 ionicon 做簡單的示範
+   -->
+  <nav class="blocks">
+    <a class="block">
+      <div class="block__item">
+        <ion-icon name="folder-outline"></ion-icon>
+      </div>
+    </a>
+    <a class="block">
+      <div class="block__item">
+        <ion-icon name="globe-outline"></ion-icon>
+      </div>
+    </a>
+    <a class="block">
+      <div class="block__item">
+        <ion-icon name="image-outline"></ion-icon>
+      </div>
+    </a>
+    <a class="block">
+      <div class="block__item">
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+    </a>
+    <a class="block">
+      <div class="block__item">
+        <ion-icon name="bag-handle-outline"></ion-icon>
+      </div>
+    </a>
+    <a class="block">
+      <div class="block__item">
+        <ion-icon name="logo-youtube"></ion-icon>
+      </div>
+    </a>
+    <a class="block">
+      <div class="block__item">
+        <ion-icon name="shield-half-outline"></ion-icon>
+      </div>
+    </a>
+    <a class="block">
+      <div class="block__item">
+        <ion-icon name="power-outline"></ion-icon>
+      </div>
+    </a>
+    <a class="block">
+      <div class="block__item">
+        <ion-icon name="arrow-redo-outline"></ion-icon>
+      </div>
+    </a>
+  </nav>
+</body>
+
+</html>

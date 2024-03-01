@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Document</title>
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      font-family: 'poppins';
+      height: 100vh;
+    }
+
+    body {
+      background: #23232b;
+
+    }
+
+    /* 
+用滑鼠和背景互動
+模糊視差背景
+
+前陣子在某個個人網站上看到這樣的效果
+一開始還沒注意到背景會移動和模糊
+覺得這樣的小巧思很棒
+
+你會怎麼做呢？
+    */
+
+
+    /* 
+一樣先做基本 HTML 和 基本樣式
+    */
+
+    .container {
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      place-content: center;
+    }
+
+    /* 
+接著用 CSS 變數搭配 filter 的模糊效果
+以及 translate 位移
+順便調整文字的位置
+inset 是 left、top、right、bottom
+    */
+
+    .container {
+      --blur: 4px;
+      --x: 0px;
+      --y: 0px;
+    }
+    .container > img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: bottom center;
+      filter: blur(var(--blur)) grayscale(0.5);
+      transform: translate(var(--x), var(--y));
+      z-index: 0;
+      transition: .1s linear;
+    }
+    .container p,
+    .container h1 {
+      width: 500px;
+      position: relative;
+      color: #f0f0f0;
+      text-align: center;
+    }
+    .container h1 {
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <img src="./bg.jpg" />
+    <h1>UNIVERSE</h1>
+    <p>
+      The universe is all of space and time and their contents, including planets, stars, galaxies, and all other forms of matter and energy. 
+      <br/>
+      <br/>
+      The Big Bang theory is the prevailing cosmological description of the development of the universe. According to this theory, space and time emerged together 13.787±0.020 billion years
+      ago, and the universe has been expanding ever since the Big Bang. 
+      <br/>
+      <br/>
+      While the spatial size of the entire universe is unknown, it is possible to measure the size of the observable universe, which is approximately 93
+      billion light-years in diameter at the present day.
+    </p>
+  </div>
+
+  <script>
+
+    /*
+接著用 JS 來取得滑鼠的位置 clientX、clientY，以及圖片離視窗左上角的位置和高度寬度
+可以用 getBoundingClientRect 這個 api，他能夠快速幫我們獲得這些資訊
+
+接著計算 x, y，並用 setProperty 賦值給 CSS 變數
+模糊的效果要用 Math.abs() 包起來，因為他不能有負的值
+
+這樣就大功告成了！
+很有趣的效果，分享給你
+那今天就這樣，一樣下篇貼文見～！
+    */
+
+    const container = document.querySelector('.container')
+
+    container.addEventListener('mousemove', (e) => {
+      const { clientX, clientY } = e;
+      const { top, left, width, height } 
+        = container.getBoundingClientRect();
+
+      const x = clientX - left - width / 2;
+      const y = clientY - top - height / 2;
+
+      container.style.setProperty('--blur', `${Math.abs(x / 200) + 4}px`)
+      container.style.setProperty('--x', `${-x / 200}px`)
+      container.style.setProperty('--y', `${-y / 200}px`)
+    })
+
+  </script>
+</body>
+
+</html>

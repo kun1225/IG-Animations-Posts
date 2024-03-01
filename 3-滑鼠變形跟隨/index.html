@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Mouse Effect</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 500%;
+    }
+
+    body {
+      background: #23232b;
+    }
+
+    /* 
+    我們先簡單做出圓圈的樣式
+    這樣就可以看到做上角的小圈圈
+    */
+
+    /*
+    這裡可以用 fixed 這樣它就不會在螢幕滾動時跑到螢幕外
+    */
+
+    .mouse {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 2px solid #fff;
+      border-radius: 100%;
+      top: -20px;
+      left: -20px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="mouse">
+
+    <script>
+const mouseElement = document.querySelector('.mouse');
+
+const mouse = { x: 0, y: 0 };
+const previousMouse = { x: 0, y: 0 };
+const styledMouse = { x: 0, y: 0 };
+
+let currentScale = 0;
+let currentAngle = 0
+
+const SPEED = 0.2;
+
+window.addEventListener('mousemove', (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY
+})
+
+const mouseAnimation = () => {
+
+  // Translate the mouse
+  styledMouse.x += (mouse.x - styledMouse.x) * SPEED;
+  styledMouse.y += (mouse.y - styledMouse.y) * SPEED;
+
+  const translate = `translate(${styledMouse.x}px, ${styledMouse.y}px)`;
+
+  // Scale the mouse
+  const deltaMouse = {
+    x: styledMouse.x - previousMouse.x,
+    y: styledMouse.y - previousMouse.y
+  }
+
+  previousMouse.x = mouse.x
+  previousMouse.y = mouse.y
+
+  const mouseVelocity = Math.min(Math.sqrt(deltaMouse.x ** 2 + deltaMouse.y ** 2), 100);
+
+  const scaleValue = (mouseVelocity / 100) * 0.5;
+  // For smooth scale effect
+  // "want to be (scaleValue)" minus "where we are (currentScale)"
+  currentScale += (scaleValue - currentScale) * SPEED
+
+  const scale = `scale(${1 + currentScale}, ${1 - currentScale})`;
+
+  // Rotate the mouse
+  const angle = Math.atan2(deltaMouse.y, deltaMouse.x) * 180 / Math.PI;
+
+  if (mouseVelocity > 20) currentAngle = angle;
+
+  const rotate = `rotate(${currentAngle}deg)`;
+
+
+  mouseElement.style.transform = `${translate}  ${rotate} ${scale}`;
+
+  window.requestAnimationFrame(mouseAnimation);
+}
+
+mouseAnimation();
+    </script>
+  </div>
+</body>
+
+</html>

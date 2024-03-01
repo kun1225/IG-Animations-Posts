@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Document</title>
+
+  <link
+    rel="stylesheet"
+    href="./../base.css"
+  >
+  <link
+    rel="stylesheet"
+    href="./index.css"
+  >
+</head>
+
+<body>
+
+  <!-- 
+    越來越多網站使用 Mega Menu 來幫助用戶更好的找尋內容
+
+    (影片)
+
+    今天就來練習刻一個簡單的 Mega Menu 吧
+
+   -->
+
+   <!-- 
+
+    一樣先簡單製作 HTML
+    
+    -->
+
+  <header class="header">
+    <a
+      href="#"
+      class="logo"
+    >Logo</a>
+
+    <div class="menu-btn">
+      <div class="menu-btn__lines"></div>
+    </div>
+
+    <nav class="header__menu">
+      <ul class="menu__items">
+        <li class="menu__item">
+          <a
+            href="#"
+            class="menu__item__link"
+          >Home</a>
+        </li>
+        <li class="menu__item">
+          <p
+            class="menu__item__link"
+            data-mega-menu-trigger="Cocktail"
+          >Cocktail</p>
+        </li>
+        <li class="menu__item">
+          <p
+            class="menu__item__link"
+            data-mega-menu-trigger="Tequila"
+          >Tequila</p>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  
+  <!-- 
+    接著來做 mega menu 吧
+    整個架構不能難，最外層的 wrapper 等等用來定位
+    裡面有 title、body、nav、img
+   -->
+
+  <div class="mega-menu__wrapper">
+    <section
+      class="mega-menu"
+      data-mega-menu-name="Cocktail"
+    >
+      <h3 class="mega-menu__title">Cocktail</h3>
+      <p class="mega-menu__body">A cocktail is an alcoholic mixed drink. Most commonly, a cocktail is a combination of
+        one or more spirits mixed with other ingredients, such as juices, flavored syrups, tonic water, shrubs, and
+        bitters.</p>
+      <ul class="mega-menu__items">
+          <li class="mega-menu__item"><a href="#">Item 1</a></li>
+          <li class="mega-menu__item"><a href="#">Item 2</a></li>
+          <li class="mega-menu__item"><a href="#">Item 3</a></li>
+      </ul>
+      <div class="mega-menu__img"><img
+          src="./img.jpg"
+          alt="Cocktail img"
+        ></div>
+
+    </section>
+    <section
+      class="mega-menu"
+      data-mega-menu-name="Tequila"
+    >
+      <h3 class="mega-menu__title">Tequila</h3>
+      <p class="mega-menu__body">Tequila is a distilled beverage made from the blue agave plant, primarily in the area
+        surrounding the city of Tequila 65 km (40 mi) northwest of Guadalajara, and in the Jaliscan Highlands (Los Altos
+        de Jalisco) of the central western Mexican state of Jalisco.</p>
+      <nav class="mega-menu__items">
+        <ul>
+          <li class="mega-menu__item"><a href="#">Item 1</a></li>
+          <li><a href="#">Item 2</a></li>
+          <li><a href="#">Item 3</a></li>
+        </ul>
+      </nav>
+      <div class="mega-menu__img"><img
+          src="./img2.jpg"
+          alt="Cocktail img"
+        ></div>
+
+    </section>
+  </div>
+
+
+  <script src="./index.js"></script>
+</body>
+
+</html>

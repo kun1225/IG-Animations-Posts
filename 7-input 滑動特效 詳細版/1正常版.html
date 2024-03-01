@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>多行文字浮現</title>
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+
+      :root {
+        --white: #fdfdfd;
+        --bg: #23232b;
+        --color1: #2ecce0;
+        --color2: #ff6a71;
+        --color3: #fccf31;
+        --color4: #fa7c49;
+        --color5: #92fe9d;
+        --color6: #2575fc;
+        --color7: #479ffd;
+        --color8: #ff9da2;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-family: 'Righteous', sans-serif;
+        font-weight: 500;
+      }
+
+      body {
+        min-height: 100vh;
+        background: #23232b;
+        display: grid;
+        place-content: center;
+      }
+
+      .slider {
+        position: relative;
+      }
+
+      .slider__input {
+        width: min(500px, 50vw);
+        margin-inline: 5px;
+        appearance: none;
+        height: 5px;
+        border-radius: 999px;
+        outline: none;
+        background: linear-gradient(
+          to right,
+          #ff9da2 var(--percent),
+          gray var(--percent)
+        );
+        --percent: 50%;
+      }
+      .slider__input::-webkit-slider-thumb {
+        appearance: none;
+        background: #ff9da2;
+        box-shadow: 0px 0px 0px 10px #ff9da2 inset;
+        border-radius: 50%;
+        width: 15px;
+        height: 15px;
+        transition: 0.5s;
+      }
+      .slider__input:hover::-webkit-slider-thumb,
+      .slider__input::-webkit-slider-thumb:hover {
+        background: #fff;
+        width: 30px;
+        height: 30px;
+        box-shadow: 0px 0px 0px 3px #ff9da2 inset;
+      }
+
+      .slider__input:hover ~ .slider__label {
+        opacity: 1;
+      }
+
+      .slider__label {
+        opacity: 0;
+        background: #fff;
+        width: fit-content;
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-content: center;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 130%;
+        transform: translateX(-50%);
+        left: 50%;
+        transition: 0.2s linear;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slider">
+      <input type="range" class="slider__input" max="100"/>
+      <label class="slider__label"></label>
+    </div>
+
+    <script>
+      const sliderInput = document.querySelector('.slider__input');
+      const sliderLabel = document.querySelector('.slider__label');
+      sliderLabel.innerHTML = sliderInput.max / 2;
+
+      sliderInput.addEventListener('input', (e) => {
+        const value = e.target.value;
+        const max = e.target.max;
+        const min = e.target.min;
+        const possibleValues = max - min;
+        const relativeValue = (value - min) / possibleValues;
+        const percent = relativeValue * 100;
+
+
+        sliderInput.style.setProperty('--percent', `${percent}%`);
+        sliderLabel.style.left = `${percent}%`;
+        sliderLabel.style.transform = `translate(${-percent}%)`
+        sliderLabel.innerHTML = value;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Document</title>
+
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      font-family: 'poppins';
+      height: 100%;
+    }
+
+    body {
+      background: #23232b;
+      display: grid;
+      place-content: center;
+    }
+
+    /* 
+    純 CSS 怎麼做表單的浮動標籤
+    不需要 JS 也能做出常見的 UI 效果
+    */
+
+    /* 
+    在很多填表單的地方都會看到類似這樣的效果
+    當輸入者輸入後，標籤會移到上面
+    如果沒有輸入東西，則會往下移
+
+    你想到怎麼做了嗎?
+    這可以用 css 中很特別的偽類做到喔
+    */
+
+    /* 
+    一樣我們先簡單做移下樣式
+    */
+
+    .input-container {
+      position: relative;
+      margin-top: 48px;
+    }
+
+    .input::selection {
+      color: #23232b;
+      background: #fff;
+    }
+
+    .input {
+      font-size: 20px;
+      width: 100%;
+      padding: 8px 0;
+      color: #fff;
+      border: none;
+      outline: none;
+      border-bottom: 1px solid #999;
+      transition: 250ms ease-in-out;
+      background-color: transparent;
+    }
+
+    .input:focus {
+      border-bottom-color: #ddd;
+    }
+
+    .input::placeholder {
+      color: transparent;
+    }
+
+    /* .input::-webkit-contacts-auto-fill-button {
+      visibility: hidden;
+      pointer-events: none;
+      position: absolute;
+    } */
+
+    .label {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      color: #999;
+      pointer-events: none;
+      transform-origin: left center;
+      transition: 250ms ease-in-out;
+    }
+
+    .input:focus+.label {
+      color: #ddd;
+    }
+
+    .input:focus+.label,
+    .input:not(:placeholder-shown)+.label {
+      transform: translateY(-100%) scale(0.75);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="input-container">
+    <input
+      class="input"
+      type="text"
+      placeholder="Name"
+    />
+    <label
+      class="label"
+      for="name"
+    >
+      Name
+    </label>
+  </div>
+
+
+  <div class="input-container">
+    <input
+      class="input"
+      type="email"
+      placeholder="Email"
+    />
+    <label
+      class="label"
+      for="email"
+    >
+      Email
+    </label>
+  </div>
+</body>
+
+</html>
