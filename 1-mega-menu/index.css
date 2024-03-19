@@ -77,6 +77,11 @@ wrapper 用 relative 搭配 mega-menu 用 absolute
 
 /* 
 接著我們簡單用 grid 排版
+grid-area 的內容分別是指
+- grid-row-start
+- grid-column-start
+- grid-row-end
+- grid-column-end
 */
 
 .mega-menu__title {
