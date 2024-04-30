@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Document</title>
+
+  <link
+    rel="stylesheet"
+    href="./../base.css"
+  >
+
+  <style>
+    .container,
+    .container2 {
+      width: 400px;
+      aspect-ratio: 16 / 9;
+
+      position: relative;
+      display: block;
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      box-shadow: inset 0px 0px 10px 10px #23232b;
+    }
+
+    .container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: relative;
+
+      /* mask-image: linear-gradient(to top, transparent 0%, black 10%, black 90%, transparent 100%), 
+      linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+      mask-size: 90% 100%, 100% 90%;
+      mask-repeat: no-repeat;
+      mask-position: center bottom, center; */
+    }
+
+    /* .container2 img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      mask-image: url(#fuzzy-border-mask);
+      mask-mode: alpha;
+    }
+
+    .container2 svg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 1;
+    } */
+  </style>
+</head>
+
+<body>
+
+  <!-- <div class="container2">
+    <svg  xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="blur" filterUnits="userSpaceOnUse">
+          <feGaussianBlur stdDeviation="10" />
+        </filter>
+    
+        <mask id="fuzzy-border-mask">
+          <rect x="10%" y="10%" width="80%" height="80%" fill="black" filter="url(#blur)" />
+        </mask>
+
+      </defs>
+    </svg>
+    <img
+      src="./img.jpg"
+      alt="img"
+    >
+  </div> -->
+
+
+  <div class="container">
+    <img
+      src="./img.jpg"
+      alt="img"
+    >
+  </div>
+
+
+
+</body>
+
+</html>

@@ -17,18 +17,20 @@
   <style>
     nav {
       position: fixed;
+      left: 0;
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 1.5em 2em;
-      color: #cdc6be;
+      color: var(--blue);
       mix-blend-mode: difference;
       z-index: 2;
     }
 
     .logo {
       font-size: 30px;
+      font-weight: bold;
     }
 
     .toggle-btn {
@@ -54,7 +56,7 @@
       width: 40px;
       height: 2px;
       position: absolute;
-      background: #cdc6be;
+      background: var(--blue);
       transition: all 250ms ease-out;
       will-change: transform;
     }
@@ -83,9 +85,10 @@
       left: 0;
       width: 100vw;
       height: 100svh;
-      background: #cdc6be;
+      background: var(--blue);
       will-change: transform;
       clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+      transition: 1s cubic-bezier(0.785, 0.135, 0.15, 0.86);
     }
 
     .overlay-menu {
@@ -98,11 +101,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      gap: 16px;
     }
 
     .menu-item {
-      display: flex;
       cursor: pointer;
+      overflow: hidden;
     }
 
     .menu-item p {
@@ -111,7 +115,8 @@
       font-size: 14vw;
       line-height: 1;
       will-change: transform;
-      transition: letter-spacing 0.2s;
+      transition: transform 0s 0.6s, letter-spacing 0.2s;
+      transform: translateY(255px);
     }
 
     .menu-item p:hover {
@@ -119,7 +124,8 @@
     }
 
     .menu-item#active p {
-      color: #f65044;
+      color: var(--black);
+      mix-blend-mode: difference;
     }
 
     .sub-menu {
@@ -129,22 +135,31 @@
       translate: -50% 0;
       display: flex;
       gap: 0.5em;
-      color: #cec6be;
       opacity: 0;
       cursor: pointer;
-      mix-blend-mode: difference;
+      transition: opacity 0.2s;
+    }
 
+    .overlay-menu.is-active p {
+      transform: translateY(0px);
+      transition: transform 0.4s var(--delay), letter-spacing 0.2s;
+    }
+
+    .overlay.is-active {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%)
+    }
+
+    .sub-menu.is-active {
+      opacity: 1;
+      transition: opacity 0.4s 1s;
     }
   </style>
 </head>
 
 <body>
   <nav>
-    <div class="info">
-      <p>Folio Vol. 1</p>
-    </div>
     <div class="logo">
-      <p>Logo Brand</p>
+      <p>Logo</p>
     </div>
     <div class="toggle-btn">
       <button class="burger"></button>
@@ -182,39 +197,23 @@
   ></script>
 
   <script>
-    const toggleButton = document.querySelector('.burger')
+    const toggleButton = document.querySelector('.burger');
+    const menuItems = document.querySelectorAll('.menu-item p');
+    const overlayMenu = document.querySelector('.overlay-menu');
+    const overlay = document.querySelector('.overlay');
+    const subMenu = document.querySelector('.sub-menu');
     let isOpen = false;
 
-    gsap.set('.menu-item p', { y: 255 });
-
-    const timeline = gsap.timeline({ paused: true });
-
-    timeline.to('.overlay', {
-      duration: 1.5,
-      clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-      ease: 'power4.inOut',
-    });
-
-    timeline.to('.menu-item p', {
-      duration: 0.5,
-      stagger: 0.2,
-      y: 0,
-      ease: 'power4.inOut',
-    }, '-=1');
-
-    timeline.to('.sub-menu', {
-      opacity: 1,
-      duration: 0.5,
-      ease: 'power1.inOut',
-      delay: 0.5
+    menuItems.forEach((item, index) => {
+      item.style.setProperty('--delay', `${index * 0.1 + 0.4}s`);
     });
 
     toggleButton.addEventListener('click', () => {
+      overlay.classList.toggle('is-active');
+      overlayMenu.classList.toggle('is-active');
+      subMenu.classList.toggle('is-active');
       toggleButton.classList.toggle('is-active');
-      if (isOpen) timeline.reverse();
-      else timeline.play();
-      isOpen = !isOpen;
-    })
+    });
 
   </script>
 </body>

@@ -111,8 +111,8 @@
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
-        const cols = Math.floor((width + SPACING) / (GRID_SIZE + SPACING));
-        const rows = Math.floor((height + SPACING) / (GRID_SIZE + SPACING));
+        const cols = Math.floor(width / (GRID_SIZE + SPACING));
+        const rows = Math.floor(height / (GRID_SIZE + SPACING));
         let particles = [];
 
         function drawGrid() {

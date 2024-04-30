@@ -1,0 +1,41 @@
+  <svg
+    width="240"
+    height="240"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <!-- Define a filter with a Gaussian Blur -->
+    <defs>
+      <filter
+        width="240"
+        height="240"
+        x="0"
+        y="0"
+        id="blur"
+        filterUnits="userSpaceOnUse"
+      >
+        <feGaussianBlur stdDeviation="10" />
+      </filter>
+
+      <mask id="fuzzy-border-mask">
+        <rect
+          x="0"
+          y="0"
+          width="240"
+          height="240"
+          fill="white"
+          filter="url(#blur)"
+        />
+      </mask>
+
+
+    </defs>
+    <rect
+      x="20"
+      y="20"
+      width="200"
+      height="200"
+      fill="white"
+      filter="url(#blur)"
+    />
+
+  </svg>

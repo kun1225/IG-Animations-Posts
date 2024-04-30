@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Random Boxes</title>
+
+  <link
+    rel="stylesheet"
+    href="../base.css"
+  >
+
+  <style>
+    .card {
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    /* 
+    利用 canvas 做出
+    具有科技感的卡片粒子特效
+
+    前陣子在 clerk 的網站上看到這樣的效果
+    將鼠標移到卡片上時，粒子會從卡片中心向外擴散開來，形成一個科技感的視覺效果。
+    今天就來帶你做出這個卡片粒子特效
+    */
+
+    /* 
+    canvas 元素被設置為絕對定位,且初始透明度為 0.5。並使用 mask 屬性在頂部添加一個漸變遮罩。
+    .card 設置了寬高比(1:1) 並用 grid 來置中文字。
+    當鼠標懸停在 .card 上時,內部的 canvas 將通過改變 clip-path 來變成一個大圓形,覆蓋整個卡片區域。
+    最後為了讓 .card__text 在 canvas 的上方，記得設定 z-index
+    */
+
+    /* 
+    接著讓我們來實現 canvas 的粒子特效
+    */
+
+    canvas {
+      position: absolute;
+      mask: linear-gradient(to top, transparent 10%, #000 100%);
+    }
+
+    .cards {
+      display: flex;
+      gap: 16px;
+    }
+
+    .card {
+      display: grid;
+      place-content: center;
+      position: relative;
+      width: 160px;
+      aspect-ratio: 1 / 1;
+      color: var(--color);
+      border: 0.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      transition: 0.4s ease-in-out;
+    }
+
+    .card__text {
+      position: relative;
+      z-index: 1;
+      color: #fff;
+      opacity: 0.5;
+      transition: 0.4s ease-in-out;
+    }
+
+    /* 當鼠標懸停在 .card 上時,內部的 canvas 將通過改變 clip-path 來變成一個大圓形,覆蓋整個卡片區域。 */
+    canvas {
+      opacity: 0;
+      clip-path: circle(0 at 50% 70%);
+      transition: opacity 0.8s ease-in-out, clip-path 0.1s ease-in-out;
+      transition-delay: 0s, 0.4s;
+    }
+    .card:hover canvas {
+      opacity: 1;
+      clip-path: circle(100% at 50% 50%);
+      transition-duration: 0.1s, 0.4s;
+      transition-delay: 0s, 0s;
+    }
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .card:hover .card__text {
+      color: inherit;
+      opacity: 1;
+      transform: translateY(-8px);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 這裡我們有一個 .cards 容器,內部包含了三個 .card 元素,
+    每個卡片都有一個 <canvas> 元素和一個文字段落 <p>。
+    每個卡片有一個不同的 --color CSS variable, 用於設置文字和粒子的顏色。 -->
+  <div class="cards">
+    <div
+      class="card"
+      style="--color: #3bf0a5"
+    >
+      <canvas></canvas>
+      <p class="card__text">crafted</p>
+    </div>
+    <div
+      class="card"
+      style="--color: #2ecee0"
+    >
+      <canvas></canvas>
+      <p class="card__text">performance</p>
+    </div>
+    <div
+      class="card"
+      style="--color: #f6e231"
+    >
+      <canvas></canvas>
+      <p class="card__text">exceptional</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const allCanvas = document.querySelectorAll('.card > canvas');
+
+      const GRID_SIZE = 1;
+      const SPACING = 3;
+      const LIFETIME = 20000;
+
+      // 先獲取 canvas 元素並設定一些變數，用於控制粒子的大小、間距和生命週期。
+      // GRID_SIZE 和 SPACING 將決定粒子網格的大小和間距,而 LIFETIME 則決定了每個粒子的最大存活時間(20秒)。
+
+      // 接著我們循環全部的 canvas 元素
+
+      // 先獲取了每個 <canvas> 元素的父元素 parent,以及取得設置的 CSS 變量 --color。然後使用 getBoundingClientRect() 獲取父元素的寬高,並將這些值設置為 <canvas> 元素的寬高,確保 <canvas> 能夠完全覆蓋父元素。
+      // 接著根據 <canvas> 的寬高、GRID_SIZE 和 SPACING 計算出網格的列數 cols 和行數 rows。最後初始化一個空數組 particles 用於存儲粒子數據。
+
+      allCanvas.forEach((canvas) => {
+        const parent = canvas.parentNode;
+        const color = parent.style.getPropertyValue('--color');
+        const { width, height } = parent.getBoundingClientRect();
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        const cols = Math.floor(width / (GRID_SIZE + SPACING));
+        const rows = Math.floor(height / (GRID_SIZE + SPACING));
+        let particles = [];
+
+
+        // 這是整個動畫的核心部分 - drawGrid 函數。每一帧執行時,它會:
+        /*清空 <canvas> 上的內容
+獲取當前時間,並過濾掉生命週期已結束的粒子
+遍歷網格,對於每個空的網格單元,以一定的概率創建一個新的粒子,並將其添加到 particles 數組中
+遍歷 particles 數組,繪製每個粒子。粒子的透明度根據其剩餘生命週期計算得出
+使用 requestAnimationFrame 請求瀏覽器在下一帧繼續執行 drawGrid 函數
+通過不斷重複這個過程,就能實現持續的粒子動畫效果。 
+最後,調用一次 drawGrid 函數啟動動畫。
+*/
+
+
+        function drawGrid() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          let currentTime = Date.now();
+          particles = particles.filter(particle => currentTime - particle.startTime < particle.lifetime);
+
+          for (let i = 1; i < rows - 1; i++) {
+            for (let j = 1; j < cols - 1; j++) {
+              let x = j * (GRID_SIZE + SPACING);
+              let y = i * (GRID_SIZE + SPACING);
+
+              let existingParticle = 
+                particles.find(p => p.x === x && p.y === y);
+              if (!existingParticle) {
+                let lifetime = Math.random() * LIFETIME;
+                particles.push({x, y, startTime: Date.now(), lifetime
+                });
+              }
+            }
+          }
+          particles.forEach(particle => {
+            ctx.fillStyle = color;
+            ctx.globalAlpha = 
+              (particle.lifetime - (Date.now() - particle.startTime)) / LIFETIME;
+            ctx.fillRect(particle.x, particle.y, GRID_SIZE, GRID_SIZE);
+          });
+
+          requestAnimationFrame(drawGrid);
+        }
+
+        drawGrid();
+      });
+    });
+
+    /*
+    最後我們回到 CSS 加上 hover 特效，就大功告成了！
+    */
+
+  </script>
+</body>
+
+</html>
