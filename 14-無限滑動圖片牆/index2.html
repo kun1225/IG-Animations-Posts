@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>Canvas</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      width: 100%;
+      height: 100vh;
+      background-color: #171717;
+      overflow: hidden;
+    }
+
+    .canvas {
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      cursor: pointer;
+      transition: 0.5s;
+      transform: skew(5deg, 1deg);
+    }
+  </style>
+</head>
+
+<body>
+  <canvas class="canvas"></canvas>
+</body>
+<script>
+
+  const SPEED = 0.12;
+
+  class PhotoGrid {
+    constructor(selector) {
+
+      this.canvas = document.querySelector(selector);
+      this.context = this.canvas.getContext("2d");
+      this.totalImages = 14;
+      this.rowMax = 6;
+      this.colMax = 6;
+      this.imgMargin = 60;
+
+      this.imgWidth = 900 / 4;
+      this.imgHeight = 1600 / 4;
+
+      this.totalWidth = Math.floor((this.rowMax + 2) * (this.imgWidth + this.imgMargin));
+      this.totalHeight = Math.floor((this.colMax + 2) * (this.imgHeight + this.imgMargin));
+
+      this.imgData = [];
+      this.ifMovable = false;
+
+      this.lastX = 0;
+      this.lastY = 0;
+
+      this.init();
+    }
+
+    init() {
+      this.resize();
+      this.createEvents();
+      this.createImgData();
+    }
+
+    resize() {
+      this.canvas.width = this.canvas.clientWidth;
+      this.canvas.height = this.canvas.clientHeight;
+
+      this.imgWidth = 900 / 4;
+      this.imgHeight = 1600 / 4;
+
+      this.totalWidth = Math.floor((this.rowMax) * (this.imgWidth + this.imgMargin) - this.imgMargin);
+      this.totalHeight = Math.floor((this.colMax) * (this.imgHeight + this.imgMargin) - this.imgMargin);
+
+      if (this.imgData.length) this.moveImgs(0, 0);
+    }
+
+    createImgData() {
+      for (let rowIndex = 0; rowIndex < this.rowMax; rowIndex++) {
+        for (let colIndex = 0; colIndex < this.colMax; colIndex++) {
+          const img = new Image();
+          const val = 
+          img.src = `./images-tiny/${(rowIndex * this.colMax + colIndex) % this.totalImages }.jpg`;
+        
+
+          img.onload = () => {
+            const x = colIndex * (this.imgWidth + this.imgMargin);
+            const y = rowIndex * (this.imgHeight + this.imgMargin) - (colIndex % 3 * this.imgHeight / 3);
+
+            this.imgData.push({ img, x, y, targetX: x, targetY: y });
+            this.context.drawImage(img, x, y, this.imgWidth, this.imgHeight);
+          }
+        }
+      }
+    }
+
+    createEvents() {
+      window.addEventListener("resize", () => this.resize());
+      this.canvas.addEventListener("mousedown", (e) => {
+        this.ifMovable = true;
+        this.lastX = e.clientX;
+        this.lastY = e.clientY;
+      });
+      this.canvas.addEventListener("mouseup", () => this.ifMovable = false);
+      this.canvas.addEventListener("mouseleave", () => this.ifMovable = false);
+      this.canvas.addEventListener("mousemove", (e) => {
+        if (!this.ifMovable) return;
+        let deltaX = e.clientX - this.lastX;
+        let deltaY = e.clientY - this.lastY;
+        this.lastX = e.clientX;
+        this.lastY = e.clientY;
+        requestAnimationFrame(() => this.moveImgs(deltaX, deltaY));
+      });
+    }
+
+    moveImgs(deltaX, deltaY) {
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+      this.imgData.forEach((img) => {
+        img.targetX += deltaX;
+        img.targetY += deltaY;
+
+        if (img.targetX > (this.totalWidth - this.imgWidth))
+          img.targetX -= this.totalWidth + this.imgMargin;
+        if (img.targetX < -this.imgWidth)
+          img.targetX += this.totalWidth + this.imgMargin;
+        if (img.targetY > (this.totalHeight - this.imgHeight))
+          img.targetY -= this.totalHeight + this.imgMargin;
+        if (img.targetY < -this.imgHeight)
+          img.targetY += this.totalHeight + this.imgMargin;
+
+        img.x += (img.targetX - img.x);
+        img.y += (img.targetY - img.y);
+        // img.y += (img.targetY - img.y) * SPEED;
+        // img.y += (img.targetY - img.y) * SPEED;
+
+        this.context.drawImage(img.img, img.x, img.y, this.imgWidth, this.imgHeight);
+      });
+
+      // 再次調用動畫以保持平滑過渡
+
+      requestAnimationFrame(() => this.moveImgs(deltaX * 0.4, deltaY * 0.4));
+
+    }
+  }
+
+  // 初始化
+  const photoGrid = new PhotoGrid(".canvas");
+
+</script>
+
+</html>
